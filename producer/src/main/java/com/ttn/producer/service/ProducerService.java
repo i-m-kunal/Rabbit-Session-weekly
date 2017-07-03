@@ -7,14 +7,21 @@ import com.ttn.producer.util.dto.QueueDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProducerService {
 
-    private AmqpTemplate amqpTemplate;
 
+    private AmqpTemplate amqpTemplate;
+    private FanoutExchange myFanoutExchange;
+
+    @Autowired
+    public void setMyFanoutExchange(FanoutExchange fanoutExchange) {
+        this.myFanoutExchange = fanoutExchange;
+    }
 
     @Autowired
     public void setAmqpTemplate(AmqpTemplate amqpTemplate) {
@@ -38,10 +45,8 @@ public class ProducerService {
             e.printStackTrace();
         }
 
-//        amqpTemplate.receiveAndConvert();
-
-        amqpTemplate.convertAndSend(AppConstants.HELLO_WORLD_QUEUE, jsonString);
-        log.info("Pusher pushed into " + AppConstants.HELLO_WORLD_QUEUE);
+        amqpTemplate.convertAndSend(myFanoutExchange.getName(), "", jsonString);
+        log.info("Pusher pushed into " + AppConstants.MY_FANOUT_EXCHANGE);
         log.info("Info Pushed");
         log.info(jsonString);
         return true;

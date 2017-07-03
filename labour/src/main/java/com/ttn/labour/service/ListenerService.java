@@ -15,7 +15,7 @@ public class ListenerService {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @RabbitListener(queues = AppConstants.HELLO_WORLD_QUEUE)
+    @RabbitListener(queues = AppConstants.LABOUR_QUEUE)
     public void helloWorldListener(Message message) throws InterruptedException {
 
         Thread.sleep(2000);
