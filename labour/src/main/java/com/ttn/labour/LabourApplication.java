@@ -1,12 +1,12 @@
-package com.ttn.worker;
+package com.ttn.labour;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProducerApplication {
+public class LabourApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProducerApplication.class, args);
+        SpringApplication.run(LabourApplication.class, args);
     }
 }
