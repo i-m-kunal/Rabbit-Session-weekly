@@ -3,10 +3,7 @@ package com.ttn.producer.config;
 import com.ttn.producer.util.constants.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,19 +32,33 @@ public class ApplicationConfig {
     }
 
 
-    @Bean(name = AppConstants.MY_FANOUT_EXCHANGE)
-    public FanoutExchange getMyFanoutExchange() {
-        return new FanoutExchange(AppConstants.MY_FANOUT_EXCHANGE);
+    @Bean(name = AppConstants.MY_DIRECT_EXCHANGE)
+    public DirectExchange getMyDirectExchange() {
+        return new DirectExchange(AppConstants.MY_DIRECT_EXCHANGE);
     }
 
 
     @Bean
     Binding binding1() {
-        return BindingBuilder.bind(getWorkerQueue()).to(getMyFanoutExchange());
+        return BindingBuilder.bind(getWorkerQueue()).to(getMyDirectExchange()).with("orange");
     }
 
     @Bean
     Binding binding2() {
-        return BindingBuilder.bind(getLabourQueue()).to(getMyFanoutExchange());
+        return BindingBuilder.bind(getLabourQueue()).to(getMyDirectExchange()).with("green");
     }
+
+    @Bean
+    Binding binding3() {
+        return BindingBuilder.bind(getLabourQueue()).to(getMyDirectExchange()).with("black");
+    }
+
+    @Bean
+    Binding binding4() {
+        return BindingBuilder.bind(getWorkerQueue()).to(getMyDirectExchange()).with("black");
+    }
+
+
+
+
 }

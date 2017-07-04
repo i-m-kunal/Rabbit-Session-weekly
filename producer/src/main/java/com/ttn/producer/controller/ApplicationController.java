@@ -19,19 +19,12 @@ public class ApplicationController {
     }
 
 
-    @RequestMapping(value = "/pushIntoHelloWorld", produces = "application/json")
-    public String pushInHelloWorldQueue(@RequestParam String value) {
+    @RequestMapping(value = "/pushIntoDirectExchangeQueue", produces = "application/json")
+    public String pushIntoDirectExchange(@RequestParam String value,@RequestParam String routingKey) {
 
-        producerService.pushIntoHelloWorldQueue(value);
+        producerService.pushIntoDirectExchange(value,routingKey);
         return "Data Pushed Into Hello World Queue";
+
     }
-
-
-    @RequestMapping(value = "/helloWorld", method = RequestMethod.POST, produces = "application/json")
-    public Boolean helloWorldPusher(@RequestParam String value) {
-        System.out.println(">>>" + value);
-        return true;
-    }
-
 
 }

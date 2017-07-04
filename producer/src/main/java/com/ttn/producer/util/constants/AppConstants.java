@@ -8,6 +8,7 @@ public class AppConstants {
     public static final String WORKER_QUEUE ="WorkerQueue";
     public static final String LABOUR_QUEUE ="LabourQueue";
     public static final String MY_FANOUT_EXCHANGE ="MyFanoutExchange";
+    public static final String MY_DIRECT_EXCHANGE ="MyDirectExchange";
 
 
 }

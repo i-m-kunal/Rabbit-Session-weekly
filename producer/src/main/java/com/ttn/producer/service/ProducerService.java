@@ -7,6 +7,7 @@ import com.ttn.producer.util.dto.QueueDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ public class ProducerService {
 
 
     private AmqpTemplate amqpTemplate;
-    private FanoutExchange myFanoutExchange;
+    private DirectExchange myDirectExchange;
 
     @Autowired
-    public void setMyFanoutExchange(FanoutExchange fanoutExchange) {
-        this.myFanoutExchange = fanoutExchange;
+    public void setMyDirectExchange(DirectExchange directExchange) {
+        this.myDirectExchange = directExchange;
     }
 
     @Autowired
@@ -31,8 +32,7 @@ public class ProducerService {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public Boolean pushIntoHelloWorldQueue(String value) {
-
+    public Boolean pushIntoDirectExchange(String value, String routingKey) {
         QueueDTO queueDTO = new QueueDTO(value);
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,10 +45,11 @@ public class ProducerService {
             e.printStackTrace();
         }
 
-        amqpTemplate.convertAndSend(myFanoutExchange.getName(), "", jsonString);
-        log.info("Pusher pushed into " + AppConstants.MY_FANOUT_EXCHANGE);
+        amqpTemplate.convertAndSend(myDirectExchange.getName(), routingKey, jsonString);
+        log.info("Pusher pushed into " + AppConstants.MY_DIRECT_EXCHANGE);
         log.info("Info Pushed");
         log.info(jsonString);
+
         return true;
     }
 }
