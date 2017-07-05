@@ -10,6 +10,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +27,7 @@ public class ProducerService {
 
     @Autowired
     public void setAmqpTemplate(AmqpTemplate amqpTemplate) {
+
         this.amqpTemplate = amqpTemplate;
     }
 
@@ -44,11 +46,11 @@ public class ProducerService {
             log.error("Json Processing Exception Occurred" + e.getMessage());
             e.printStackTrace();
         }
-
-        amqpTemplate.convertAndSend(myDirectExchange.getName(), routingKey, jsonString);
-        log.info("Pusher pushed into " + AppConstants.MY_DIRECT_EXCHANGE);
-        log.info("Info Pushed");
         log.info(jsonString);
+
+        Integer response = (Integer) amqpTemplate.convertSendAndReceive(myDirectExchange.getName(), routingKey, jsonString);
+        log.info("Value Length Is  :" + response);
+
 
         return true;
     }

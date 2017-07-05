@@ -7,6 +7,7 @@ public class QueueDTO {
     private String value;
     private Date dateCreated;
 
+    public QueueDTO(){}
     public QueueDTO(String value) {
         this.value = value;
         this.dateCreated = new Date();
