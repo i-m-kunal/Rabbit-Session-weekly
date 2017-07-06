@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,11 @@ public class ProducerService {
 
 
     private AmqpTemplate amqpTemplate;
-    private DirectExchange myDirectExchange;
+    private TopicExchange myTopicExchange;
 
     @Autowired
-    public void setMyDirectExchange(DirectExchange directExchange) {
-        this.myDirectExchange = directExchange;
+    public void setMyTopicExchange(TopicExchange topicExchange) {
+        this.myTopicExchange = topicExchange;
     }
 
     @Autowired
@@ -34,7 +35,8 @@ public class ProducerService {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public Boolean pushIntoDirectExchange(String value, String routingKey) {
+    public Boolean pushIntoDirectExchange(String value, String routingKey)
+    {
         QueueDTO queueDTO = new QueueDTO(value);
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -48,9 +50,8 @@ public class ProducerService {
         }
         log.info(jsonString);
 
-        Integer response = (Integer) amqpTemplate.convertSendAndReceive(myDirectExchange.getName(), routingKey, jsonString);
-        log.info("Value Length Is  :" + response);
 
+        amqpTemplate.convertAndSend(myTopicExchange.getName(), routingKey, jsonString);
 
         return true;
     }

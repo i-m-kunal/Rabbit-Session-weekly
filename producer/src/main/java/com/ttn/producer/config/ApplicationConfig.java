@@ -32,30 +32,25 @@ public class ApplicationConfig {
     }
 
 
-    @Bean(name = AppConstants.MY_DIRECT_EXCHANGE)
-    public DirectExchange getMyDirectExchange() {
-        return new DirectExchange(AppConstants.MY_DIRECT_EXCHANGE);
+    @Bean(name = AppConstants.MY_TOPIC_EXCHANGE)
+    public TopicExchange getMyTopicExchange() {
+        return new TopicExchange(AppConstants.MY_TOPIC_EXCHANGE);
     }
 
 
     @Bean
     Binding binding1() {
-        return BindingBuilder.bind(getWorkerQueue()).to(getMyDirectExchange()).with("orange");
+        return BindingBuilder.bind(getWorkerQueue()).to(getMyTopicExchange()).with("*.orange.*");
     }
 
     @Bean
     Binding binding2() {
-        return BindingBuilder.bind(getLabourQueue()).to(getMyDirectExchange()).with("green");
+        return BindingBuilder.bind(getLabourQueue()).to(getMyTopicExchange()).with("*.*.rabbit");
     }
 
     @Bean
     Binding binding3() {
-        return BindingBuilder.bind(getLabourQueue()).to(getMyDirectExchange()).with("black");
-    }
-
-    @Bean
-    Binding binding4() {
-        return BindingBuilder.bind(getWorkerQueue()).to(getMyDirectExchange()).with("black");
+        return BindingBuilder.bind(getLabourQueue()).to(getMyTopicExchange()).with("lazy.#");
     }
 
 

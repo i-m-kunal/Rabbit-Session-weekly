@@ -18,7 +18,7 @@ public class ListenerService {
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     @RabbitListener(queues = AppConstants.WORKER_QUEUE)
-    public Integer helloWorldListener(Message message) throws InterruptedException {
+    public void helloWorldListener(Message message) throws InterruptedException {
 
         Thread.sleep(3000);
         String jsonString = new String(message.getBody());
@@ -28,8 +28,7 @@ public class ListenerService {
             queueDTO = objectMapper.readValue(jsonString, QueueDTO.class);
         } catch (Exception e) {
         }
-        log.info("Message Received");
+        log.info("Message Received" + queueDTO.getValue());
         log.info(jsonString);
-        return queueDTO.getValue().length();
     }
 }
